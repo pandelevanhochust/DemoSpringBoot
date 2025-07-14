@@ -3,7 +3,6 @@ package com.example.DemoSpring.controller;
 import com.example.DemoSpring.entity.UserModel;
 import com.example.DemoSpring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
