@@ -1,9 +1,16 @@
 package com.example.DemoSpring.service;
 import com.example.DemoSpring.entity.UserModel;
 import com.example.DemoSpring.repository.UserRepository;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import com.example.DemoSpring.entity.UserPrinciple;
 
 
 import java.time.LocalDateTime;
@@ -14,12 +21,21 @@ import java.util.Optional;
 @RequiredArgsConstructor //Ignore the constructor for UserService
 @Slf4j
 
-public class UserService {
-    private final UserRepository userRepository;
+public class UserService implements UserDetailsService {
 
-//    public UserService(UserRepository userRepo, UserRepository userRepo1) {
-//        this.userRepo = userRepo1;
-//    }
+    @Autowired
+    private final UserRepository userRepository;
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserModel user = userRepository.findByUsername(username);
+        if (user == null) {
+            System.out.println("User not found");
+            throw new UsernameNotFoundException(username + "not found");
+        }
+        return new UserPrinciple(user);
+    }
 
     public List<UserModel> getAllUsers(){
         return userRepository.findAll();
@@ -36,6 +52,7 @@ public class UserService {
 
     public UserModel createUser(UserModel userModel){
         userModel.setUpdatedAt(LocalDateTime.now());
+        userModel.setPassword(encoder.encode(userModel.getPassword()));
         return userRepository.save(userModel);
     }
 
@@ -48,7 +65,7 @@ public class UserService {
             userFound.setPassword(userModel.getPassword());
             userFound.setMessage(userModel.getMessage());
             userFound.setBirthday(userModel.getBirthday());
-            userFound.setUpdatedAt(userModel.getUpdatedAt());
+            userFound.setUpdatedAt(LocalDateTime.now());
             return userRepository.save(userFound);
         } else {
             return null;
@@ -56,8 +73,8 @@ public class UserService {
     }
 
 
-    public  void deleteUser(Integer id){
-        userRepository.deleteById(id);
+    public void deleteUser(Integer id){
+            userRepository.deleteById(id);
     }
 
 }

@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 
+//@CrossOrigin(origins = "") / cors for FE
 public class UserController {
 
     @Autowired
@@ -49,5 +50,8 @@ public class UserController {
         }
         System.out.println("Delete user successfully");
     }
+
+//    @PostMapping("/login")
+//    public void login(@RequestBody ){}
 
 }
