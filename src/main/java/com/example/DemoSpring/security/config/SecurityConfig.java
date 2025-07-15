@@ -2,6 +2,8 @@ package com.example.DemoSpring.security.config;
 
 import com.example.DemoSpring.security.jwt.JwtFilter;
 import com.example.DemoSpring.security.jwt.JwtFilter;
+import com.example.DemoSpring.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // Enable your custom Spring Security configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Autowired
@@ -38,19 +41,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                     .requestMatchers("login").permitAll() // Allow this API not required authentication
                     .anyRequest().authenticated())  //force every API req needs authentication
-//        http.formLogin(Customizer.withDefaults());  //automatically add two login and logout APIs
+//        http.formLogin(Customizer.withDefaults());  //automatically add two login and logout without authentication, must be config through properties
             .httpBasic(Customizer.withDefaults())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session session reset all the time
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session reset all the time, force every request needed auth
+                // .ALWAYS   Always create a session, even if not needed.
+                // .NEVER    Do not create session, but use existing one if present
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add jwtFilter before to check the JWT rightness before checking user-password
         return http.build();
     }
 
-    @Bean
+    @Bean   //verify the auth
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(5));
-
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(4));
         return provider;
     }
 

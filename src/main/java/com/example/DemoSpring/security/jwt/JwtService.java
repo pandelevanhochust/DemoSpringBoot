@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,20 +22,24 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String generateToken(String username){
-        Map<String,Object> claims = new HashMap<>();
+    private Key key;
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24)) // a day
-                .signWith(getKey(), SignatureAlgorithm.HS256).compact();
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private Key getKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public String generateToken(String username){
+        //Only use claims if you want add more infor into
+//        Map<String,Object> claims = new HashMap<>();
+
+        return Jwts.builder()
+//                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*24)) // a day
+                .signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
     public String extractUserName(String token) {
@@ -49,7 +54,7 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getKey())
+                .setSigningKey(key)
                 .build().parseClaimsJws(token).getBody();
     }
 
@@ -66,6 +71,12 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+    //Since the generating key everytime is slow
+    //    private Key getKey(){
+    //        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+    //        return Keys.hmacShaKeyFor(keyBytes);
+    //    }
 }
 
 

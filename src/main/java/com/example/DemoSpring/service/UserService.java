@@ -20,12 +20,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor //Ignore the constructor for UserService
 @Slf4j
-
 public class UserService implements UserDetailsService {
 
-    @Autowired
     private final UserRepository userRepository;
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(4); // Higher strength slower request
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
