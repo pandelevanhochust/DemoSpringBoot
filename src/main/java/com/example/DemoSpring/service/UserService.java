@@ -4,6 +4,10 @@ import com.example.DemoSpring.repository.UserRepository;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -64,6 +68,7 @@ public class UserService implements UserDetailsService {
             userFound.setMessage(userModel.getMessage());
             userFound.setBirthday(userModel.getBirthday());
             userFound.setUpdatedAt(LocalDateTime.now());
+            userFound.setEmail(userModel.getEmail());
             return userRepository.save(userFound);
         } else {
             return null;
@@ -73,6 +78,17 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Integer id){
             userRepository.deleteById(id);
+    }
+
+    //Debugging
+    public void catcall(){
+        System.out.println("hello how low");
+    }
+    //Pagination & Sorting
+    public Page<UserModel> getUsers(int page,int size, String sortBy, String order){
+        Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page,size,sort);
+        return userRepository.findAll(pageable);
     }
 
 }

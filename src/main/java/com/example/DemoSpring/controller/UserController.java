@@ -4,6 +4,7 @@ import com.example.DemoSpring.entity.UserModel;
 import com.example.DemoSpring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public List<UserModel> getUsers(){
+    public List<UserModel> getAllUsers(){
         return userService.getAllUsers();
     }
 
@@ -51,6 +52,14 @@ public class UserController {
         System.out.println("Delete user successfully");
     }
 
+    @GetMapping("/page")
+    public Page<UserModel> getUsers(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int  size,
+                                    @RequestParam(defaultValue =  "id") String sortBy,
+                                    @RequestParam(defaultValue =  "desc") String order){
+        return userService.getUsers(page,size,sortBy,order);
+
+    }
 //    @PostMapping("/login")
 //    public void login(@RequestBody ){}
 

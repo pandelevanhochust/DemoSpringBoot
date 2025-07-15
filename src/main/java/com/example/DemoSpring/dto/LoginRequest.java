@@ -1,4 +1,4 @@
-package com.example.DemoSpring.entity;
+package com.example.DemoSpring.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

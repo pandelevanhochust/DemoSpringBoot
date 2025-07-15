@@ -24,4 +24,5 @@ public class UserModel {
     private String message;
     private LocalDate birthday;
     private LocalDateTime updatedAt;
+    private String email;
 }
