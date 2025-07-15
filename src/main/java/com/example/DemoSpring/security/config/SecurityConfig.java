@@ -41,7 +41,7 @@ public class SecurityConfig {
 //        http.formLogin(Customizer.withDefaults());  //automatically add two login and logout APIs
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session session reset all the time
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
