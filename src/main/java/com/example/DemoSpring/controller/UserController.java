@@ -2,6 +2,7 @@ package com.example.DemoSpring.controller;
 
 import com.example.DemoSpring.entity.UserModel;
 import com.example.DemoSpring.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,12 +33,12 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserModel createUsers(@RequestBody UserModel user){
+    public UserModel createUsers(@Valid @RequestBody UserModel user){
         return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public UserModel updateUser(@PathVariable int id,@RequestBody UserModel user){
+    public UserModel updateUser(@Valid @PathVariable int id,@RequestBody UserModel user){
         return userService.updateUser(id,user);
     }
 
@@ -58,7 +59,6 @@ public class UserController {
                                     @RequestParam(defaultValue =  "id") String sortBy,
                                     @RequestParam(defaultValue =  "desc") String order){
         return userService.getUsers(page,size,sortBy,order);
-
     }
 //    @PostMapping("/login")
 //    public void login(@RequestBody ){}
