@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService {
             UserModel userFound = optionalUser.get();
             userFound.setFullname(userModel.getFullname());
             userFound.setUsername(userModel.getUsername());
-            userFound.setPassword(userModel.getPassword());
+            userFound.setPassword(encoder.encode(userModel.getPassword()));
             userFound.setMessage(userModel.getMessage());
             userFound.setBirthday(userModel.getBirthday());
             userFound.setUpdatedAt(LocalDateTime.now());

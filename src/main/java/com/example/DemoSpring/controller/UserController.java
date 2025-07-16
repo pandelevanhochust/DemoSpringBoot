@@ -33,12 +33,12 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserModel createUsers(@Valid @RequestBody UserModel user){
+    public UserModel createUsers(@RequestBody UserModel user){
         return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public UserModel updateUser(@Valid @PathVariable int id,@RequestBody UserModel user){
+    public UserModel updateUser(@PathVariable int id,@RequestBody UserModel user){
         return userService.updateUser(id,user);
     }
 
