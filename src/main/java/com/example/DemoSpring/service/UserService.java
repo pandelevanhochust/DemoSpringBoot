@@ -80,10 +80,6 @@ public class UserService implements UserDetailsService {
             userRepository.deleteById(id);
     }
 
-    //Debugging
-    public void catcall(){
-        System.out.println("hello how low");
-    }
     //Pagination & Sorting
     public Page<UserModel> getUsers(int page,int size, String sortBy, String order){
         Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
@@ -91,4 +87,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(pageable);
     }
 
+    //Debugging
+    public void catcall(){
+        System.out.println("hello how low");
+    }
 }

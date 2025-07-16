@@ -39,7 +39,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // disable csrf token since API clients does not use this token, and it is vulnerable
                 .authorizeHttpRequests(request -> request
-                    .requestMatchers("login").permitAll() // Allow this API not required authentication
+                    .requestMatchers("login","register").permitAll() // Allow this API not required authentication
                     .anyRequest().authenticated())  //force every API req needs authentication
 //        http.formLogin(Customizer.withDefaults());  //automatically add two login and logout without authentication, must be config through properties
             .httpBasic(Customizer.withDefaults())

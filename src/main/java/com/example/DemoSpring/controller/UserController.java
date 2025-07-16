@@ -58,7 +58,6 @@ public class UserController {
                                     @RequestParam(defaultValue =  "id") String sortBy,
                                     @RequestParam(defaultValue =  "desc") String order){
         return userService.getUsers(page,size,sortBy,order);
-
     }
 //    @PostMapping("/login")
 //    public void login(@RequestBody ){}

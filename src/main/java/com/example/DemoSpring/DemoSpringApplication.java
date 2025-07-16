@@ -14,6 +14,9 @@ public class DemoSpringApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(DemoSpringApplication.class, args);
+		for(String beanName: context.getBeanDefinitionNames()){
+			System.out.println(beanName);
+		}
 
 		final UserService obj = (UserService) context.getBean("userService");
 		obj.catcall();
