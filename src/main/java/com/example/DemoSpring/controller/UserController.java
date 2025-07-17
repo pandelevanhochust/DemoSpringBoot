@@ -57,8 +57,9 @@ public class UserController {
     public Page<UserModel> getUsers(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int  size,
                                     @RequestParam(defaultValue =  "id") String sortBy,
-                                    @RequestParam(defaultValue =  "desc") String order){
-        return userService.getUsers(page,size,sortBy,order);
+                                    @RequestParam(defaultValue =  "desc") String order,
+                                    @RequestParam(defaultValue = "") String pattern){
+        return userService.getUsers(page,size,sortBy,order,pattern);
     }
 //    @PostMapping("/login")
 //    public void login(@RequestBody ){}
