@@ -81,10 +81,13 @@ public class UserService implements UserDetailsService {
     }
 
     //Pagination & Sorting
-    public Page<UserModel> getUsers(int page,int size, String sortBy, String order){
+    public Page<UserModel> getUsers(int page,int size, String sortBy, String order,String pattern){
         Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page,size,sort);
-        return userRepository.findAll(pageable);
+
+        String new_pattern = '%' + pattern + '%';
+        return userRepository.findByFullnameContaining(pattern,pageable);
+//        return userRepository.findByFullnameIsLike(new_pattern,pageable);
     }
 
     //Debugging
